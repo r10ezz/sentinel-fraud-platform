@@ -13,37 +13,31 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="text-lg">
-        Loading...
+      <div className="flex h-[60vh] items-center justify-center text-zinc-400">
+        Loading Sentinel Dashboard...
       </div>
     );
   }
 
   if (!data) {
     return (
-      <div>
-        Failed to load dashboard.
+      <div className="flex h-[60vh] items-center justify-center text-red-400">
+        Failed to load dashboard telemetry.
       </div>
     );
   }
 
   return (
     <div className="space-y-8">
-
       <DashboardHero />
 
       <StatsGrid stats={data.stats} />
 
-      <ChartsSection />
+      <ChartsSection stats={data.stats} />
 
-      <TransactionsSection
-        transactions={data.recentTransactions}
-      />
+      <TransactionsSection transactions={data.recentTransactions} />
 
-      <CasesSection
-        cases={data.recentCases}
-      />
-
+      <CasesSection cases={data.recentCases} />
     </div>
   );
 }

@@ -1,9 +1,29 @@
 "use client";
 
+import { useState } from "react";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
-import { useState } from "react";
+
+import LiveAlertListener from "@/components/socket/live-alert-listener";
+import useLiveUpdates from "@/hooks/use-live-updates";
+
+function AppProviders({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  useLiveUpdates();
+
+  return (
+    <>
+      <LiveAlertListener />
+      {children}
+      <Toaster richColors position="top-right" />
+    </>
+  );
+}
 
 export default function Providers({
   children,
@@ -29,9 +49,7 @@ export default function Providers({
       enableSystem={false}
     >
       <QueryClientProvider client={queryClient}>
-        {children}
-
-        <Toaster richColors position="top-right" />
+        <AppProviders>{children}</AppProviders>
       </QueryClientProvider>
     </ThemeProvider>
   );

@@ -5,7 +5,8 @@ const transaction_controller_1 = require("../controllers/transaction.controller"
 const auth_middleware_1 = require("../middleware/auth.middleware");
 const router = (0, express_1.Router)();
 router.use(auth_middleware_1.authenticate);
-router.post("/", transaction_controller_1.create);
+// Admin and Analyst can create manual transactions; Viewers have read-only access
+router.post("/", (0, auth_middleware_1.authorizeRole)("ADMIN", "ANALYST"), transaction_controller_1.create);
 router.get("/", transaction_controller_1.getAll);
 router.get("/:id", transaction_controller_1.getOne);
 exports.default = router;

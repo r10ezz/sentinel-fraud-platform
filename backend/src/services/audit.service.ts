@@ -13,12 +13,9 @@ export async function createAuditLog(data: AuditInput) {
   return prisma.auditLog.create({
     data: {
       action: data.action,
-
       entityType: data.entityType,
       entityId: data.entityId,
-
       description: data.description,
-
       user: {
         connect: {
           id: data.userId,

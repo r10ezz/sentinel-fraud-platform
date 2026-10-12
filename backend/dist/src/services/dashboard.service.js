@@ -35,7 +35,14 @@ async function getDashboardData() {
                 createdAt: "desc",
             },
             include: {
-                user: true,
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        role: true,
+                    },
+                },
             },
         }),
         prisma_1.default.case.findMany({

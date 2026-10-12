@@ -6,13 +6,14 @@ import {
   getOne,
 } from "../controllers/transaction.controller";
 
-import { authenticate } from "../middleware/auth.middleware";
+import { authenticate, authorizeRole } from "../middleware/auth.middleware";
 
 const router = Router();
 
 router.use(authenticate);
 
-router.post("/", create);
+// Admin and Analyst can create manual transactions; Viewers have read-only access
+router.post("/", authorizeRole("ADMIN", "ANALYST"), create);
 
 router.get("/", getAll);
 

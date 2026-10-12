@@ -25,16 +25,66 @@ export async function createFraudCase(transactionId: string) {
 /**
  * Get all fraud cases
  */
-export async function getAllCases() {
-  return prisma.case.findMany({
-    include: {
-      transaction: true,
-      assignedTo: true,
+export async function getAllCases(
+  page = 1,
+  limit = 10,
+  search = "",
+  status?: CaseStatus,
+  priority?: Priority,
+  sort: "asc" | "desc" = "desc"
+) {
+  const where = {
+    ...(status && { status }),
+    ...(priority && { priority }),
+
+    ...(search && {
+      OR: [
+        {
+          title: {
+            contains: search,
+            mode: "insensitive" as const,
+          },
+        },
+        {
+          transaction: {
+            merchant: {
+              contains: search,
+              mode: "insensitive" as const,
+            },
+          },
+        },
+      ],
+    }),
+  };
+
+  const [cases, total] = await Promise.all([
+    prisma.case.findMany({
+      where,
+      include: {
+        transaction: true,
+        assignedTo: true,
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: {
+        createdAt: sort,
+      },
+    }),
+
+    prisma.case.count({
+      where,
+    }),
+  ]);
+
+  return {
+    cases,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
     },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  };
 }
 
 /**

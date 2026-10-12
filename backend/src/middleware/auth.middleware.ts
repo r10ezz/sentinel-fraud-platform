@@ -1,7 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { Role } from "@prisma/client";
 
 import { env } from "../config/env";
+
+export interface AuthUser {
+  id: string;
+  role: Role;
+}
+
+export interface AuthRequest extends Request {
+  user?: AuthUser;
+}
 
 export function authenticate(
   req: Request,
@@ -20,9 +30,9 @@ export function authenticate(
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, env.JWT_SECRET);
+    const decoded = jwt.verify(token, env.JWT_SECRET) as AuthUser;
 
-    (req as any).user = decoded;
+    (req as AuthRequest).user = decoded;
 
     next();
   } catch {
@@ -31,4 +41,26 @@ export function authenticate(
       message: "Invalid Token",
     });
   }
+}
+
+export function authorizeRole(...roles: Role[]) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const user = (req as AuthRequest).user;
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    if (!roles.includes(user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: `Forbidden: Requires one of [${roles.join(", ")}] role`,
+      });
+    }
+
+    next();
+  };
 }
