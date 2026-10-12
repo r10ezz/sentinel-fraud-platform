@@ -15,7 +15,9 @@ const audit_log_routes_1 = __importDefault(require("./routes/audit-log.routes"))
 const simulation_routes_1 = __importDefault(require("./routes/simulation.routes"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: env_1.env.FRONTEND_URL,
+    origin: env_1.env.FRONTEND_URL === "*"
+        ? true
+        : [env_1.env.FRONTEND_URL, "http://localhost:3000"].filter(Boolean),
     credentials: true,
 }));
 app.use(express_1.default.json());
