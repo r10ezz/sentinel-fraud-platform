@@ -19,6 +19,12 @@
   <b>A real-time financial fraud detection platform that evaluates banking transactions with multi-factor risk heuristics, triggers instant WebSocket alerts, and automates investigation workflows.</b>
 </p>
 
+<p align="center">
+  <a href="https://sentinel-fraud-platform.vercel.app/" target="_blank">
+    <img src="https://img.shields.io/badge/Live%20Platform-Visit%20Sentinel%20%E2%86%92-0070F3?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
+  </a>
+</p>
+
 </div>
 
 ---
@@ -103,7 +109,9 @@ Every transaction is scored from `0` to `100` based on dynamic risk rules:
 
 ---
 
-## 👥 Demo Credentials
+## 👥 Live Demo & Credentials
+
+🌐 **Live Application**: [https://sentinel-fraud-platform.vercel.app](https://sentinel-fraud-platform.vercel.app/)
 
 Pre-seeded accounts are available for instant evaluation:
 
